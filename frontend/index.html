@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diseño de Riego Inteligente | Trovu</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="background-mesh"></div>
+    
+    <main class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <i class="ph ph-drop-half-bottom"></i>
+                <h1>Trovu Irrigation</h1>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+                <div class="step-indicators">
+                    <div class="step-dot active" data-step="1">1</div>
+                    <div class="step-dot" data-step="2">2</div>
+                    <div class="step-dot" data-step="3">3</div>
+                    <div class="step-dot" data-step="4">4</div>
+                    <div class="step-dot" data-step="5">5</div>
+                </div>
+            </div>
+        </header>
+
+        <section class="wizard-container">
+            
+            <!-- STEP 1: Parámetros Iniciales -->
+            <div class="wizard-step active" id="step-1">
+                <div class="step-header">
+                    <h2><i class="ph ph-plant"></i> Parámetros Iniciales</h2>
+                    <p>Ingresa los datos agronómicos de tu parcela y cultivo para comenzar el diseño.</p>
+                </div>
+                <form id="form-parametros" class="glass-form">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="eto">ETo (Evapotranspiración Ref. mm/día)</label>
+                            <input type="number" id="eto" step="0.1" required placeholder="Ej: 5.2">
+                        </div>
+                        <div class="input-group">
+                            <label for="kc">Kc (Coeficiente de Cultivo)</label>
+                            <input type="number" id="kc" step="0.01" required placeholder="Ej: 0.8">
+                        </div>
+                        <div class="input-group">
+                            <label for="pe">Precipitación Efectiva (mm/día)</label>
+                            <input type="number" id="pe" step="0.1" required placeholder="Ej: 0.0">
+                        </div>
+                        <div class="input-group">
+                            <label for="ea">Eficiencia de Aplicación (0 - 1)</label>
+                            <input type="number" id="ea" step="0.05" required placeholder="Ej: 0.9" max="1" min="0.1">
+                        </div>
+                        <div class="input-group">
+                            <label for="cad">Capacidad Almacenamiento Agua (%)</label>
+                            <input type="number" id="cad" step="0.1" required placeholder="Ej: 14.5">
+                        </div>
+                        <div class="input-group">
+                            <label for="pr">Profundidad Radicular (mm)</label>
+                            <input type="number" id="pr" step="10" required placeholder="Ej: 400">
+                        </div>
+                        <div class="input-group">
+                            <label for="f">Fracción Agotamiento (0 - 1)</label>
+                            <input type="number" id="f" step="0.05" required placeholder="Ej: 0.4" max="1" min="0.1">
+                        </div>
+                    </div>
+                    <div class="step-actions">
+                        <button type="submit" class="btn-primary">Calcular Sistema <i class="ph ph-arrow-right"></i></button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- STEP 2: Cálculos Agronómicos -->
+            <div class="wizard-step" id="step-2">
+                <div class="step-header">
+                    <h2><i class="ph ph-calculator"></i> Resultados Agronómicos</h2>
+                    <p>Resultados procesados por nuestro motor de cálculo inteligente.</p>
+                </div>
+                
+                <div class="results-grid" id="results-container">
+                    <!-- Dynamic content injected via JS -->
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Calculando parámetros...</p>
+                    </div>
+                </div>
+
+                <div class="step-actions">
+                    <button type="button" class="btn-secondary btn-prev">Atrás</button>
+                    <button type="button" class="btn-primary btn-next">Procedimiento de Control <i class="ph ph-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Procedimiento de Control -->
+            <div class="wizard-step" id="step-3">
+                <div class="step-header">
+                    <h2><i class="ph ph-sliders"></i> Procedimiento de Control</h2>
+                    <p>Estrategia recomendada para la automatización y control del riego.</p>
+                </div>
+                
+                <div class="content-card glass-card">
+                    <div class="info-module">
+                        <i class="ph ph-clock-countdown"></i>
+                        <div class="info-text">
+                            <h3>Frecuencia de Riego</h3>
+                            <p id="control-frecuencia">Basado en el intervalo máximo, sugerimos regar cada X días para evitar estrés hídrico.</p>
+                        </div>
+                    </div>
+                    <div class="info-module">
+                        <i class="ph ph-drop"></i>
+                        <div class="info-text">
+                            <h3>Tiempos de Inyección</h3>
+                            <p>El tiempo de riego deberá dividirse en: 10% presurización, 70% inyección de fertilizante, y 20% lavado del sistema.</p>
+                        </div>
+                    </div>
+                    <div class="info-module">
+                        <i class="ph ph-gauge"></i>
+                        <div class="info-text">
+                            <h3>Sensores de Monitoreo</h3>
+                            <p>Se recomienda instalar tensiómetros a la mitad de la profundidad radicular efectiva para validar el agotamiento permisible.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-actions">
+                    <button type="button" class="btn-secondary btn-prev">Atrás</button>
+                    <button type="button" class="btn-primary btn-next">Plan de Fertirrigación <i class="ph ph-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- STEP 4: Fertirrigación -->
+            <div class="wizard-step" id="step-4">
+                <div class="step-header">
+                    <h2><i class="ph ph-flask"></i> Fertirrigación</h2>
+                    <p>Diseño de inyección de nutrientes basado en el flujo de riego.</p>
+                </div>
+                
+                <div class="content-card glass-card">
+                    <p class="section-desc">Seleccione el método de inyección para su parcela:</p>
+                    <div class="options-grid">
+                        <label class="option-card">
+                            <input type="radio" name="inj" checked>
+                            <div class="option-content">
+                                <h4>Proporcional</h4>
+                                <p>Inyección constante según el caudal de agua.</p>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="inj">
+                            <div class="option-content">
+                                <h4>Cuantitativo</h4>
+                                <p>Inyección por volumen o tiempo definido.</p>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="alert-box info">
+                        <i class="ph ph-info"></i>
+                        <p>Nota: La tasa de inyección se debe ajustar para que la conductividad eléctrica (CE) no supere los umbrales de tolerancia del cultivo.</p>
+                    </div>
+                </div>
+
+                <div class="step-actions">
+                    <button type="button" class="btn-secondary btn-prev">Atrás</button>
+                    <button type="button" class="btn-primary btn-next">Troubleshooting <i class="ph ph-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- STEP 5: Resolución de Problemas -->
+            <div class="wizard-step" id="step-5">
+                <div class="step-header">
+                    <h2><i class="ph ph-wrench"></i> Resolución de Problemas</h2>
+                    <p>Diagnóstico de problemas comunes en sistemas localizados.</p>
+                </div>
+                
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <button class="accordion-btn">Obstrucción de Emisores <i class="ph ph-caret-down"></i></button>
+                        <div class="accordion-content">
+                            <p><strong>Causa:</strong> Precipitados químicos o algas. <br><strong>Solución:</strong> Lavado con ácido fosfórico/nítrico o tratamiento con peróxido de hidrógeno.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-btn">Caída de Presión en la Red <i class="ph ph-caret-down"></i></button>
+                        <div class="accordion-content">
+                            <p><strong>Causa:</strong> Fugas en matriz o filtros colmatados. <br><strong>Solución:</strong> Revisar manómetros antes y después del filtro. Limpiar mallas/anillas.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-btn">Estrés Hídrico Repentino <i class="ph ph-caret-down"></i></button>
+                        <div class="accordion-content">
+                            <p><strong>Causa:</strong> Cálculo incorrecto de ETc o válvula atascada. <br><strong>Solución:</strong> Revisar datos meteorológicos recientes y purgar la válvula electromagnética.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-actions">
+                    <button type="button" class="btn-secondary btn-prev">Atrás</button>
+                    <button type="button" class="btn-success" onclick="location.reload()">Finalizar y Reiniciar <i class="ph ph-check-circle"></i></button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

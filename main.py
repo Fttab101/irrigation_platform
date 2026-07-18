@@ -1,4 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -33,10 +35,12 @@ class ParcelaResponse(ParcelaBase):
     class Config:
         orm_mode = True
 
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
 # --- API Endpoints ---
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def read_root():
-    return {"message": "Bienvenido a la Plataforma de Diseño de Riego. Dirígete a /docs para ver la API."}
+    return FileResponse("frontend/index.html")
 
 @app.post("/parcelas/", response_model=ParcelaResponse, tags=["Parcelas"])
 def crear_parcela(parcela: ParcelaCreate, db: Session = Depends(get_db)):
